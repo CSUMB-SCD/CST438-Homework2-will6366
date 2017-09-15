@@ -15,8 +15,7 @@ var fullEncodedKey = btoa(keys.client+":"+keys.secret);
 
 /* GET getty page. */
 router.get('/', function(req, res, next) {
-    //   res.render('getty', {});
-    res.send("Encoded String: "+fullEncodedKey);
+    router.send("This is the twitter page");
     
 });
 
