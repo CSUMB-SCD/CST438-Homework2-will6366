@@ -68,7 +68,7 @@ router.get('/:phrase', function(req, res, next) {
         res.render('getty', {
             'jsonImage' : JSON.parse(jsonToSendBack),
             'imageArraySize' : size
-        })
+        });
     });
 });
 module.exports = router;

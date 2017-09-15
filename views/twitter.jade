@@ -1,0 +1,16 @@
+extends layout
+
+block styles
+
+block scripts
+
+block content
+    h1 Welcome to the twitter page!
+    br
+    - for (var i = 0; i < numStatuses; i++) {
+        p=statuses[i]["text"]
+        br
+    - }
+        
+    br
+    h5=numStatuses
