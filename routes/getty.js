@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
-function makeApiRequest(phrase="coffee", sendBrowserResponse) {
+function makeGettyApiRequest(phrase="coffee", sendBrowserResponse) {
     var https = require("https");
     
     
@@ -44,31 +44,31 @@ function makeApiRequest(phrase="coffee", sendBrowserResponse) {
 /* GET getty page. */
 router.get('/', function(req, res, next) {
     //   res.render('getty', {});
-    makeApiRequest("gaming",function(jsonToSendBack) {
+    makeGettyApiRequest("gaming",function(jsonToSendBack) {
         var obj = JSON.parse(jsonToSendBack);
         var images = obj["images"];
         var size = images.length;
-        // res.send("Size: "+size);
+        res.send(images);
         
-        res.render('getty', {
-            'jsonImage' : JSON.parse(jsonToSendBack),
-            'imageArraySize' : size
-        })
+        // res.render('getty', {
+        //     'jsonImage' : images,
+        //     'imageArraySize' : size
+        // })
     });
 });
 
 /* GET getty page. */
 router.get('/:phrase', function(req, res, next) {
-    makeApiRequest(req.params.phrase,function(jsonToSendBack) {
+    makeGettyApiRequest(req.params.phrase,function(jsonToSendBack) {
         var obj = JSON.parse(jsonToSendBack);
         var images = obj["images"];
         var size = images.length;
         // res.send("Size: "+size);
-        
-        res.render('getty', {
-            'jsonImage' : JSON.parse(jsonToSendBack),
-            'imageArraySize' : size
-        });
+        res.send(images);
+        // res.render('getty', {
+        //     'jsonImage' : JSON.parse(jsonToSendBack),
+        //     'imageArraySize' : size
+        // });
     });
 });
 module.exports = router;

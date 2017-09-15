@@ -12,7 +12,7 @@ var keys = {
 var fullEncodedKey = btoa(keys.client+":"+keys.secret);
 
 
-function getBearerToken(returnBearerToken) {
+function getTwitterBearerToken(returnBearerToken) {
     
     var options = {
         hostname: "api.twitter.com",
@@ -53,7 +53,7 @@ function getBearerToken(returnBearerToken) {
 }
 
 
-function makeApiRequest(bearerToken,returnJsonResponse) {
+function makeTwitterApiRequest(bearerToken,returnJsonResponse) {
     var options = {
         hostname: "api.twitter.com",
         port: 443,
@@ -90,18 +90,18 @@ function makeApiRequest(bearerToken,returnJsonResponse) {
 /* GET getty page. */
 router.get('/', function(req, res, next) {
     // res.send("This is the twitter page");
-    getBearerToken(function(bearerToken) {
+    getTwitterBearerToken(function(bearerToken) {
         // Now we have the bearer token
         // res.send(bearerToken);
-        makeApiRequest(bearerToken,function(responseJson) {
+        makeTwitterApiRequest(bearerToken,function(responseJson) {
             var jsonObj = JSON.parse(responseJson);
             var statuses = jsonObj.statuses;
             var size = statuses.length;
-            // res.send(statuses);
-            res.render('twitter', {
-                "statuses":statuses,
-                "numStatuses":size
-            });
+            res.send(statuses);
+            // res.render('twitter', {
+            //     "statuses":statuses,
+            //     "numStatuses":size
+            // });
         });
     });
     

@@ -1,6 +1,26 @@
 extends layout
 
+block styles
+  link(rel='stylesheet', href='/stylesheets/index.css')
+
+
 block content
-  h1= title
-  p Welcome to #{title}
-  p Class: #{className}
+  table
+        tr
+        - for (var i = 0; i < gettyImageArrLength; i++) {
+            td
+                img(src=gettyImages[i]["display_sizes"][0]["uri"] alt="Missing")
+            - if(((i+1)%5)==0) {
+            tr
+            //   br  
+            - }
+        - }
+  
+  
+  - for (var i = 0; i < twitterStatusArrLength; i++) {
+      // for url: https://twitter.com/statuses/statuses[i]["id_str"]
+      // for author: statuses[i]
+  
+      p=twitterStatuses[i]["text"]
+      br
+  - }

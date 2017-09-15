@@ -3,24 +3,157 @@ var express = require('express');
 // Create Router File
 var router = express.Router();
 
-/* GET home page. */
+var https = require("https");
+var btoa = require("btoa");
+
+var keys = {
+    "client":process.env.TWITTER_CONSUMER_KEY,
+    "secret":process.env.TWITTER_CONSUMER_SECRET
+}
+var fullEncodedKey = btoa(keys.client+":"+keys.secret);
+
+
+function getTwitterBearerToken(returnBearerToken) {
+    
+    var options = {
+        hostname: "api.twitter.com",
+        port: 443,
+        path: '/oauth2/token',
+        method: 'POST',
+        headers: {
+            'Authorization':"Basic "+fullEncodedKey,
+            'Content-Type':"application/x-www-form-urlencoded;charset=UTF-8",
+        }
+    };
+    
+    var postData = 'grant_type=client_credentials';
+    
+    var apiResponse = '';
+    
+   var postReq = https.request(options, function(response) {
+            response.setEncoding('utf8');
+            response.on('data',function(chunk) {
+            //   console.log("Received data: "+ chunk); 
+               apiResponse += chunk;
+            });
+            
+            response.on('end',function() {
+                // console.log("Status Code: "+ response.statusCode);
+                // console.log("Complete response: " + apiResponse);
+                var objResponse = JSON.parse(apiResponse);
+                var accessToken = objResponse.access_token;
+                
+                returnBearerToken(accessToken);
+            });
+    }).on('error',function(e) {
+        console.log("Got an error: " + e.message);        
+    });
+    
+    postReq.write(postData);
+    postReq.end();
+}
+
+
+function makeGettyApiRequest(sendBrowserResponse) {
+    var https = require("https");
+    
+    
+    const options = {
+        hostname: "api.gettyimages.com",
+        port: 443,
+        path: '/v3/search/images?phrase=game',
+        method: 'GET',
+        headers: {
+            'Api-Key':process.env.GETTY_API_KEY
+        }
+    };
+    
+    var apiResponse = '';
+    
+    https.get(options, function(response) {
+            response.setEncoding('utf8');
+            response.on('data',function(chunk) {
+            //   console.log("Received data: "+ chunk); 
+               apiResponse += chunk;
+            });
+            
+            response.on('end',function() {
+                console.log("Status Code: "+ response.statusCode);
+                // console.log("Complete response: " + apiResponse);
+                sendBrowserResponse(apiResponse);
+                // GET Image Urls:
+                // var obj = JSON.parse(apiResponse);
+                // console.log(obj["images"][0]["display_sizes"][0]["uri"]);
+            });
+    }).on('error',function(e) {
+        console.log("Got an error: " + e.message);        
+    });
+}
+
+
+function makeTwitterApiRequest(bearerToken,returnJsonResponse) {
+    var options = {
+        hostname: "api.twitter.com",
+        port: 443,
+        path: '/1.1/search/tweets.json?q=birds',
+        method: 'GET',
+        headers: {
+            'Authorization':"Bearer "+bearerToken
+        }
+    };
+    
+    var apiResponse = '';
+    
+    var twitterRequest = https.request(options, function(response) {
+        response.setEncoding('utf8');
+        response.on('data',function(chunk) {
+           apiResponse += chunk;
+        });
+        
+        response.on('end',function() {
+            console.log("Status Code: "+ response.statusCode);
+            // console.log("Complete response: " + apiResponse);
+            // var objResponse = JSON.parse(apiResponse);
+            // var tweets = objResponse.statuses;
+            returnJsonResponse(apiResponse);
+        });
+    }).on('error',function(e) {
+        console.log("Got an error: " + e.message);        
+    });
+    
+    twitterRequest.end();
+}
+
+
+/* GET getty page. */
 router.get('/', function(req, res, next) {
-    // res.send : send text, json object, number
-    // res.send(some status number)
-    // res.render: template(view file) + json object of all values
-  res.render('index', { 
-      title: 'Express', 
-      className: 'CST438' 
-  });
+    makeGettyApiRequest(function(gettyResponseJson) {
+        var gettyObj = JSON.parse(gettyResponseJson);
+        var gettyImages = gettyObj["images"];
+        var gettyImageArrLength = gettyImages.length;
+        
+        getTwitterBearerToken(function(bearerToken) {
+        // once twitter bearer token is received, make api requests
+        
+            makeTwitterApiRequest(bearerToken,function(twitterResponseJson) {
+            var twitterObj = JSON.parse(twitterResponseJson);
+            var twitterStatuses = twitterObj.statuses;
+            var twitterStatusArrLength = twitterStatuses.length;
+                
+                res.render('index', {
+                    "title":"Getty-Twitter API",
+                    "twitterStatuses":twitterStatuses,
+                    "twitterStatusArrLength":twitterStatusArrLength,
+                    "gettyImages":gettyImages,
+                    "gettyImageArrLength":gettyImageArrLength
+                });
+            
+            });
+        
+        });
+    });
 });
 
-// Other uses
-router.get('/index/:num', function(req, res, next) {
-    // :num is a query from url (index/33), num = 33
-    // Access all post variables (append .queryName)
-    // Display the number sent in the query
-    res.send(req.params.num, 200);
-});
 
 
 // Return value of entire file

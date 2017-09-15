@@ -12,13 +12,9 @@ block content
         tr
         - for (var i = 0; i < imageArraySize; i++) {
             td
-                img(src=jsonImage["images"][i]["display_sizes"][0]["uri"] alt="Missing")
+                img(src=jsonImage[i]["display_sizes"][0]["uri"] alt="Missing")
             - if(((i+1)%5)==0) {
             tr
             //   br  
             - }
         - }
-        
-    br
-    h5 API KEY
-    p=GETTY_KEY
