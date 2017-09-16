@@ -1,12 +1,13 @@
 .background {
     background-repeat: no-repeat;
-    height:600px;
+    /*height:600px;*/
     background-size: 100% 100%;
 }
 .container {
     width: 50%;
     margin: auto;
     padding: 10px;
+    background-color: black;
 }
 .quote {
     font-size: 26px;
@@ -14,9 +15,30 @@
     color: white;
 }
 
-.container, .quote {
-    background-color: #222;
+.quote > h3 {
+    font-style: italic;
+    font-weight: bold;
+    color: orange;
+    margin-top: 0px;
 }
-a {
+.quote > a {
     color: lightblue;
+}
+
+.quote > h3, .quote > blockquote, .quote > a {
+    background-color:rgba(35,35,35,0.6);
+    padding: 5px;
+    border-radius: 20px;
+}
+
+@media only screen and (max-height : 650px) {
+    .background {
+        height: 300px;
+    }
+}
+
+@media only screen and (min-height : 651px) {
+    .background {
+        height: 600px;
+    }
 }

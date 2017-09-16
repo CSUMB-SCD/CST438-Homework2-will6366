@@ -8,20 +8,15 @@ block content
   div.container
     - var randomImageNumber = Math.floor(Math.random()*gettyImageArrLength);
     - var imageUrl = gettyImages[randomImageNumber]["display_sizes"][0]["uri"];
-    div.background(style="background-image: url('#{imageUrl}')")
-    
-    
     - var randomTweetNumber = Math.floor(Math.random()*twitterStatusArrLength);
     - var tweet = twitterStatuses[randomTweetNumber];
     - var author = tweet["user"]["name"];
     - var tweetText = tweet["text"];
     - var referenceLink = "https://twitter.com/statuses/"+tweet["id_str"];
-    // for url: https://twitter.com/statuses/statuses[i]["id_str"]
-    // for author: statuses[i]
-    
-    div.quote  
-      h3 Author: #{author}
-      "#{tweetText}" 
-      br
-      a(href="#{referenceLink}", target="_blank") Twitter Quote Source
+    div.background(style="background-image: url('#{imageUrl}')")
+      div.quote  
+        h3 Author: #{author}
+        blockquote "#{tweetText}" 
+        br
+        a(href="#{referenceLink}", target="_blank") Twitter Source
 

@@ -38,8 +38,6 @@ function getTwitterBearerToken(returnBearerToken) {
             });
             
             response.on('end',function() {
-                // console.log("Status Code: "+ response.statusCode);
-                // console.log("Complete response: " + apiResponse);
                 var objResponse = JSON.parse(apiResponse);
                 var accessToken = objResponse.access_token;
                 
@@ -61,9 +59,7 @@ function makeGettyApiRequest(sendBrowserResponse) {
     const options = {
         hostname: "api.gettyimages.com",
         port: 443,
-        // path: '/v3/search/images?phrase=gaming',
-        path: 'https://api.gettyimages.com/v3/search/images?fields=id,detail_set&sort_order=most_popular',
-        // path: 'https://api.gettyimages.com/v3/search/images?fields=id,title,thumb,referral_destinations,detail_set&sort_order=most_popular',
+        path: 'https://api.gettyimages.com/v3/search/images?fields=id,detail_set&phrase=gaming&sort_order=most_popular',
         method: 'GET',
         headers: {
             'Api-Key':process.env.GETTY_API_KEY
@@ -75,17 +71,12 @@ function makeGettyApiRequest(sendBrowserResponse) {
     https.get(options, function(response) {
             response.setEncoding('utf8');
             response.on('data',function(chunk) {
-            //   console.log("Received data: "+ chunk); 
                apiResponse += chunk;
             });
             
             response.on('end',function() {
                 console.log("Status Code: "+ response.statusCode);
-                // console.log("Complete response: " + apiResponse);
                 sendBrowserResponse(apiResponse);
-                // GET Image Urls:
-                // var obj = JSON.parse(apiResponse);
-                // console.log(obj["images"][0]["display_sizes"][0]["uri"]);
             });
     }).on('error',function(e) {
         console.log("Got an error: " + e.message);        
@@ -97,7 +88,7 @@ function makeTwitterApiRequest(bearerToken,returnJsonResponse) {
     var options = {
         hostname: "api.twitter.com",
         port: 443,
-        path: '/1.1/search/tweets.json?q=haiku&result_type=recent',
+        path: '/1.1/search/tweets.json?q=twitch&result_type=popular',
         method: 'GET',
         headers: {
             'Authorization':"Bearer "+bearerToken
@@ -114,9 +105,6 @@ function makeTwitterApiRequest(bearerToken,returnJsonResponse) {
         
         response.on('end',function() {
             console.log("Status Code: "+ response.statusCode);
-            // console.log("Complete response: " + apiResponse);
-            // var objResponse = JSON.parse(apiResponse);
-            // var tweets = objResponse.statuses;
             returnJsonResponse(apiResponse);
         });
     }).on('error',function(e) {
