@@ -61,7 +61,9 @@ function makeGettyApiRequest(sendBrowserResponse) {
     const options = {
         hostname: "api.gettyimages.com",
         port: 443,
-        path: '/v3/search/images?phrase=game',
+        // path: '/v3/search/images?phrase=gaming',
+        path: 'https://api.gettyimages.com/v3/search/images?fields=id,detail_set&sort_order=most_popular',
+        // path: 'https://api.gettyimages.com/v3/search/images?fields=id,title,thumb,referral_destinations,detail_set&sort_order=most_popular',
         method: 'GET',
         headers: {
             'Api-Key':process.env.GETTY_API_KEY
@@ -95,7 +97,7 @@ function makeTwitterApiRequest(bearerToken,returnJsonResponse) {
     var options = {
         hostname: "api.twitter.com",
         port: 443,
-        path: '/1.1/search/tweets.json?q=birds',
+        path: '/1.1/search/tweets.json?q=haiku&result_type=recent',
         method: 'GET',
         headers: {
             'Authorization':"Bearer "+bearerToken

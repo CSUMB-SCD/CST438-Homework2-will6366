@@ -1,26 +1,27 @@
-extends layout
+// extends layout
 
 block styles
   link(rel='stylesheet', href='/stylesheets/index.css')
 
 
 block content
-  table
-        tr
-        - for (var i = 0; i < gettyImageArrLength; i++) {
-            td
-                img(src=gettyImages[i]["display_sizes"][0]["uri"] alt="Missing")
-            - if(((i+1)%5)==0) {
-            tr
-            //   br  
-            - }
-        - }
-  
-  
-  - for (var i = 0; i < twitterStatusArrLength; i++) {
-      // for url: https://twitter.com/statuses/statuses[i]["id_str"]
-      // for author: statuses[i]
-  
-      p=twitterStatuses[i]["text"]
+  div.container
+    - var randomImageNumber = Math.floor(Math.random()*gettyImageArrLength);
+    - var imageUrl = gettyImages[randomImageNumber]["display_sizes"][0]["uri"];
+    div.background(style="background-image: url('#{imageUrl}')")
+    
+    
+    - var randomTweetNumber = Math.floor(Math.random()*twitterStatusArrLength);
+    - var tweet = twitterStatuses[randomTweetNumber];
+    - var author = tweet["user"]["name"];
+    - var tweetText = tweet["text"];
+    - var referenceLink = "https://twitter.com/statuses/"+tweet["id_str"];
+    // for url: https://twitter.com/statuses/statuses[i]["id_str"]
+    // for author: statuses[i]
+    
+    div.quote  
+      h3 Author: #{author}
+      "#{tweetText}" 
       br
-  - }
+      a(href="#{referenceLink}", target="_blank") Twitter Quote Source
+

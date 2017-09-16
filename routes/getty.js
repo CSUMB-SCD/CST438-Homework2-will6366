@@ -9,7 +9,7 @@ function makeGettyApiRequest(phrase="coffee", sendBrowserResponse) {
     const options = {
         hostname: "api.gettyimages.com",
         port: 443,
-        path: '/v3/search/images?phrase='+phrase,
+        path: 'https://api.gettyimages.com/v3/search/images?fields=id,title,thumb,referral_destinations,detail_set&sort_order=most_popular&phrase='+phrase,
         method: 'GET',
         headers: {
             'Api-Key':process.env.GETTY_API_KEY
@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
     //   res.render('getty', {});
     makeGettyApiRequest("gaming",function(jsonToSendBack) {
         var obj = JSON.parse(jsonToSendBack);
-        var images = obj["images"];
+        var images = obj["images"][0]["display_sizes"];
         var size = images.length;
         res.send(images);
         
@@ -66,7 +66,7 @@ router.get('/:phrase', function(req, res, next) {
         // res.send("Size: "+size);
         res.send(images);
         // res.render('getty', {
-        //     'jsonImage' : JSON.parse(jsonToSendBack),
+        //     'jsonImage' : images,
         //     'imageArraySize' : size
         // });
     });
