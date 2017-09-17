@@ -2,7 +2,7 @@
 ## CST438 Homework 2: Twitter+Getty API App
 
 ## Theme:
-The theme I selected for my dynamic display is gaming. 
+* The theme I selected for my dynamic display is gaming. 
     * The images are generic "gaming" pictures selected by a "most popular" filter
     * The twitter messages are filtered based on a "twitch" query. Twitch is a live streaming video platform popularly used for gamers. 
     
